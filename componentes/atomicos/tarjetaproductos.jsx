@@ -16,13 +16,12 @@ export default function TarjetaProducto({ producto = {}, categoria, variant = "c
   const formattedPrice = Number.isFinite(numericPrice)
     ? numericPrice.toLocaleString("es-AR")
     : precio;
-  const discountedPrice = Number.isFinite(numericPrice)
-    ? (numericPrice * 0.9).toLocaleString("es-AR", { minimumFractionDigits: 0 })
-    : null;
 
   const cart = useCart();
   const navigate = useNavigate();
   const productUrl = `/producto/${producto.id}`;
+  const hasVariants = [producto.tamanos, producto.sabores, producto.versiones,
+    producto.colores, producto.materiales].some((options) => options?.length > 0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -80,7 +79,8 @@ export default function TarjetaProducto({ producto = {}, categoria, variant = "c
   const handleAddToCart = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    cart?.addItem?.(producto, 1);
+    if (hasVariants) navigate(productUrl);
+    else cart?.addItem?.(producto, 1);
   };
 
   const cardContent = (
@@ -101,10 +101,7 @@ export default function TarjetaProducto({ producto = {}, categoria, variant = "c
           {descripcion && <figcaption className="sr-only">{descripcion}</figcaption>}
         </figure>
         {formattedPrice && (
-          <p className="tp3d-price tp3d-price--old">$ {formattedPrice}</p>
-        )}
-        {discountedPrice && (
-          <p className="tp3d-price tp3d-price--new">$ {discountedPrice}</p>
+          <p className="tp3d-price tp3d-price--new">$ {formattedPrice}</p>
         )}
       </header>
 
@@ -130,11 +127,12 @@ export default function TarjetaProducto({ producto = {}, categoria, variant = "c
         <button
           className="tp3d-add"
           type="button"
-          aria-label={`Agregar ${nombre} al carrito`}
-          data-add-to-cart={nombre}
+          disabled={producto.disponible === false || producto.stock <= 0}
+          aria-label={`${hasVariants ? "Elegir opciones de" : "Agregar al carrito:"} ${nombre}`}
+          data-add-to-cart={hasVariants ? undefined : nombre}
           onClick={handleAddToCart}
         >
-          Agregar al carrito
+          {producto.disponible === false || producto.stock <= 0 ? "No disponible" : hasVariants ? "Elegir opciones" : "Agregar al carrito"}
         </button>
       </aside>
     </section>

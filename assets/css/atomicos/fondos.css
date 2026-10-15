@@ -1,6 +1,6 @@
 :root {
-  --diag-a: rgba(59, 130, 246, 0.35);
-  --diag-b: rgba(15, 23, 42, 0.25);
+  --diag-a: rgba(246, 59, 78, 0.35);
+  --diag-b: rgba(42, 15, 18, 0.25);
 }
 
 .bg {
@@ -40,10 +40,7 @@ body.has-diagonales .bg3 {
 }
 
 body.has-fondo-estelar {
-  background:
-    radial-gradient(circle at 30% 30%, rgba(4, 0, 19, 0.863), transparent 55%),
-    radial-gradient(circle at 70% 25%, rgba(2, 0, 31, 0.753), transparent 60%),
-    linear-gradient(180deg, #000000 0%, #020529 45%, #000000 80%, #010112 100%);
+  background: var(--bg-base, #000000);
   min-height: 100%;
   overflow: hidden;
 }

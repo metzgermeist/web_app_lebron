@@ -6,10 +6,10 @@
 
 .payment-method {
   background:
-    linear-gradient(145deg, rgba(5, 6, 30, 0.95), rgba(59, 102, 241, 0.2)),
+    linear-gradient(145deg, rgba(30, 5, 8, 0.95), rgba(241, 59, 77, 0.2)),
     rgba(255, 255, 255, 0.01);
-  color: rgba(224, 226, 255, 0.95);
-  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: rgba(255, 224, 227, 0.95);
+  border: 1px solid rgba(241, 99, 113, 0.35);
   border-radius: 18px;
   padding: 0.9rem 1.2rem;
   text-align: center;
@@ -18,11 +18,11 @@
 }
 
 .payment-method.is-active {
-  border-color: rgba(59, 130, 246, 0.9);
+  border-color: rgba(246, 59, 78, 0.9);
   box-shadow:
-    0 20px 30px rgba(59, 130, 246, 0.25),
-    inset 0 0 10px rgba(79, 70, 229, 0.35);
+    0 20px 30px rgba(246, 59, 78, 0.25),
+    inset 0 0 10px rgba(229, 70, 86, 0.35);
   background:
-    linear-gradient(145deg, rgba(59, 102, 241, 0.45), rgba(15, 23, 42, 0.95)),
+    linear-gradient(145deg, rgba(241, 59, 77, 0.45), rgba(42, 15, 18, 0.95)),
     rgba(255, 255, 255, 0.01);
 }

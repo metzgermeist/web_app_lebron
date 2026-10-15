@@ -12,8 +12,8 @@ function Header() {
             <span className="dot"></span> Suplementos de alto rendimiento
           </p>
           <h1 className="title title-hero">
-            <span>El Black Friday</span>
-            <span>LLEGO </span>
+            <span>Potenciá</span>
+            <span>tu rendimiento</span>
           </h1>
           <p className="subtitle">
             Energia, fuerza y recuperacion para quienes entrenan en serio.

@@ -5,7 +5,7 @@
   border-radius: 2rem;
   background: linear-gradient(135deg,#05000000, #060507a2 60%);
   color: #fff;
-  box-shadow: 0 25px 55px #9e00c55b;
+  box-shadow: 0 25px 55px #c500145b;
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
@@ -13,7 +13,7 @@
   justify-content: center;
   max-width: min(100%, 70rem);
   isolation: isolate;
-  border: solid 1px #0602e0;
+  border: solid 1px #e00218;
   
 }
 
@@ -60,21 +60,21 @@
   letter-spacing: 0.25rem;
   text-transform: uppercase;
   background:
-    radial-gradient(circle at top, rgba(99, 102, 241, 0.5), rgba(14, 165, 233, 0.65)),
-    linear-gradient(135deg, rgba(5, 6, 30, 0.85), rgba(2, 2, 10, 0.9));
-  color: #e0f2fe;
-  border: 1px solid rgba(99, 102, 241, 0.6);
+    radial-gradient(circle at top, rgba(241, 99, 113, 0.5), rgba(233, 14, 36, 0.65)),
+    linear-gradient(135deg, rgba(30, 5, 8, 0.85), rgba(10, 2, 3, 0.9));
+  color: #fee0e3;
+  border: 1px solid rgba(241, 99, 113, 0.6);
   box-shadow:
-    0 20px 40px rgba(5, 6, 30, 0.75),
-    inset 0 0 1px rgba(59, 130, 246, 0.6);
+    0 20px 40px rgba(30, 5, 8, 0.75),
+    inset 0 0 1px rgba(246, 59, 78, 0.6);
   margin-right: 1rem;
 }
 
 .precio-promocion strong {
   font-size: 1.5rem;
   letter-spacing: 0.2rem;
-  text-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
-  color: #f8fafc;
+  text-shadow: 0 0 8px rgba(241, 99, 113, 0.6);
+  color: #fcf8f8;
 }
 
 .promo-cta {
@@ -91,7 +91,7 @@
 .promo-media img {
   width: min(380px, 100%);
   border-radius: 1.4rem;
-  box-shadow: 0 30px 50px rgba(4, 0, 21, 0.6);
+  box-shadow: 0 30px 50px rgba(21, 0, 2, 0.6);
   max-height: 450px;
   object-fit: cover;
 }

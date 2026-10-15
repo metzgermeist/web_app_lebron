@@ -5,34 +5,36 @@ import "../../assets/css/pages/carrito.css";
 import Boton from "../../componentes/atomicos/boton.jsx";
 import demoImg from "../../assets/img/starr (1).png";
 import proteina2 from "../../assets/img/proteina2 (1).png";
-import productos from "../data/productos.json";
+import { useCatalog } from "../context/CatalogContext.jsx";
+import { stockAvailable } from "../utils/cart.js";
+import { variantText } from "../utils/pedido.js";
 
 function Carrito() {
+  const { products: productos } = useCatalog();
   const {
     items,
     updateQty,
     removeItem,
-    total,
     clear,
     couponCode,
     couponDiscount,
     totalWithDiscount,
     applyCoupon,
+    catalogNotice,
   } = useCart();
   const stockMap = useMemo(() => {
     const map = new Map();
-    try {
-      productos.forEach((p) => map.set(p.id, p.stock ?? Number.MAX_SAFE_INTEGER));
-    } catch {}
+    productos.forEach((p) => map.set(String(p.id), p.stock ?? 0));
     return map;
-  }, []);
+  }, [productos]);
 
   return (
     <main className="section cart-page">
+      {catalogNotice && <p role="status" className="catalog-status">{catalogNotice}</p>}
       <section className="container carrito-grid">
         <section className="cart-left" aria-label="Productos en el carrito">
           <header className="cart-left-head">
-            <h2>Detalle</h2>
+            <h2>Tu carrito</h2>
             </header>
 
           {!items.length && (
@@ -44,12 +46,12 @@ function Carrito() {
               const line = (it.precio || 0) * (it.qty || 1);
               const price = (it.precio || 0).toLocaleString("es-AR");
               const linePrice = line.toLocaleString("es-AR");
-              const imgSrc = proteina2;
-              const maxStock = stockMap.get(String(it.id)) ?? it.stock ?? Number.MAX_SAFE_INTEGER;
+              const imgSrc = it.imagen || proteina2;
+              const maxStock = stockAvailable(items, it, stockMap.get(String(it.id)) ?? 0);
               const canDec = (it.qty || 1) > 1;
               const canInc = (it.qty || 1) < maxStock;
               return (
-                <li key={it.id} className="cart-item">
+                <li key={it.cartKey} className="cart-item">
                   <article className="ci-main">
                     <figure className="ci-figure">
                       <img
@@ -63,6 +65,7 @@ function Carrito() {
                     </figure>
                     <section className="ci-info">
                       <h3 className="ci-title">{it.nombre}</h3>
+                      {variantText(it) && <p className="ci-variants">{variantText(it)}</p>}
                       <p className="ci-price">$ {price}</p>
                       <div className="ci-qty-row">
                         <fieldset className="ci-qty">
@@ -73,7 +76,7 @@ function Carrito() {
                             className="ci-btn"
                           ariaLabel={`Restar 1 a ${it.nombre}`}
                           disabled={!canDec}
-                          onClick={() => canDec && updateQty(it.id, (it.qty || 1) - 1)}
+                          onClick={() => canDec && updateQty(it.cartKey, (it.qty || 1) - 1)}
                           >
                             -
                           </Boton>
@@ -84,7 +87,7 @@ function Carrito() {
                             className="ci-btn"
                           ariaLabel={`Sumar 1 a ${it.nombre}`}
                           disabled={!canInc}
-                          onClick={() => canInc && updateQty(it.id, (it.qty || 1) + 1)}
+                          onClick={() => canInc && updateQty(it.cartKey, (it.qty || 1) + 1)}
                           >
                             +
                           </Boton>
@@ -98,7 +101,7 @@ function Carrito() {
                         variant="ghost"
                         className="ci-remove"
                         altText="Eliminar"
-                        onClick={() => removeItem(it.id)}
+                        onClick={() => removeItem(it.cartKey)}
                         ariaLabel={`Eliminar ${it.nombre} del carrito`}
                       >
                         Eliminar artículo
@@ -138,7 +141,7 @@ function Carrito() {
           </form>
           <dl>
             <div className="cr-row">
-              <dt>Total</dt>
+              <dt>Total de productos</dt>
               <dd><strong>$ {totalWithDiscount.toLocaleString("es-AR")}</strong></dd>
             </div>
             {couponDiscount > 0 && (
@@ -152,14 +155,15 @@ function Carrito() {
           <Boton
             className="cr-pay"
             variant="primary"
-            altText="¡Potenciá tu rendimiento!"
-            href="/facturacion"
-            ariaLabel="Ir a facturación"
+            effect={false}
+            href={items.length ? "/facturacion" : undefined}
+            ariaLabel="Elegir pago y entrega"
             disabled={!items.length}
             aria-disabled={!items.length}
           >
-            Ir a pagar
+            Elegir pago y entrega
           </Boton>
+          <p>El pedido se coordina con Casa Central por WhatsApp.</p>
           </footer>
         </aside>
       </section>

@@ -8,14 +8,14 @@
 
 .summary-card {
   background:
-    linear-gradient(180deg, rgba(5, 6, 30, 0.95), rgba(59, 130, 246, 0.12)),
-    rgba(9, 12, 46, 0.9);
-  border: 3px double rgba(99, 102, 241, 0.5);
+    linear-gradient(180deg, rgba(30, 5, 8, 0.95), rgba(246, 59, 78, 0.12)),
+    rgba(46, 9, 13, 0.9);
+  border: 3px double rgba(241, 99, 113, 0.5);
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow:
     0 12px 45px rgba(0, 0, 0, 0.55),
-    inset 0 0 1px rgba(59, 130, 246, 0.25);
+    inset 0 0 1px rgba(246, 59, 78, 0.25);
   width: 100%;
 }
 
@@ -24,7 +24,7 @@
   margin-top: 0;
   margin-bottom: 0.75rem;
   font-size: 1.25rem;
-  color: #e0f2fe;
+  color: #fee0e3;
 }
 
 .summary-card dl {
@@ -37,7 +37,7 @@
   align-items: center;
   padding: 0.35rem 0;
   font-size: 0.95rem;
-  color: #e0f2fe;
+  color: #fee0e3;
 }
 
 .summary-row.summary-total dd {
@@ -47,20 +47,20 @@
 
 .summary-row.summary-discount dd,
 .summary-row.summary-interest dd {
-  color: #38bdf8;
+  color: #f8384b;
 }
 
 .summary-row.summary-installment dd {
-  color: #a5b4fc;
+  color: #fca5ae;
 }
 
 .summary-empty {
-  color: rgba(224, 226, 255, 0.6);
+  color: rgba(255, 224, 227, 0.6);
 }
 
 .summary-note p {
   margin: 0;
-  color: rgba(224, 226, 255, 0.7);
+  color: rgba(255, 224, 227, 0.7);
 }
 
 .summary-coupon-note {
@@ -71,12 +71,12 @@
 
 .summary-note-link {
   margin: 0;
-  color: rgba(224, 226, 255, 0.75);
+  color: rgba(255, 224, 227, 0.75);
   font-weight: 500;
 }
 
 .summary-note-link a {
-  color: #c4b5fd;
+  color: #fdb5bc;
   text-decoration: underline;
   font-weight: 600;
 }

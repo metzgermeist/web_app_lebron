@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import products from "../../src/data/productos.json";
+import { useCatalog } from "../../src/context/CatalogContext.jsx";
 import TarjetaProducto from "./tarjetaproductos.jsx";
 import "../../assets/css/atomicos/productosDestacados.css";
 
@@ -7,9 +7,10 @@ const DESKTOP_CARDS = 4;
 const MOBILE_CARDS = 1;
 
 export default function ProductosDestacados() {
+  const { products } = useCatalog();
   const destacadoItems = useMemo(
     () => (products || []).filter((p) => Boolean(p.destacado)),
-    [],
+    [products],
   );
   const [itemsPerPage, setItemsPerPage] = useState(() => {
     if (typeof window === "undefined") return DESKTOP_CARDS;
@@ -34,7 +35,8 @@ export default function ProductosDestacados() {
     return chunks;
   }, [destacadoItems, itemsPerPage]);
   const pageCount = Math.max(1, pages.length);
-  const [page, setPage] = useState(0);
+  const [rawPage, setPage] = useState(0);
+  const page = Math.min(rawPage, pageCount - 1);
 
   if (destacadoItems.length === 0) return null;
 
@@ -46,7 +48,7 @@ export default function ProductosDestacados() {
       <div className="productos-destacados__header">
         <div>
           <p className="productos-destacados__eyebrow">Selección Lebron</p>
-          <h2>Productos destacados 10% OFF</h2>
+          <h2>Productos destacados</h2>
         </div>
       </div>
 

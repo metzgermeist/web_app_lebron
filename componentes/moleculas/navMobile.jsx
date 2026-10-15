@@ -9,7 +9,6 @@ const PRIMARY_LINKS = [
   { href: "/#categorias", label: "Categorias" },
   { href: "/categoria/combos", label: "Combos" },
   { href: "/#gancho", label: "Porque estoy aqui?" },
-  { href: "/#mayorista", label: "Mayorista" },
 ];
 
 const QUICK_ACTIONS = [
@@ -31,7 +30,7 @@ function NavMobile() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        try { toggleRef.current?.focus(); } catch {}
+        try { toggleRef.current?.focus(); } catch { /* La navegaci?n puede continuar sin cambiar el foco. */ }
         setTimeout(() => setOpen(false), 0);
       }
     };
@@ -71,7 +70,7 @@ function NavMobile() {
         } else {
           contentRoot.setAttribute("aria-hidden", "true");
         }
-      } catch (error) {
+      } catch {
         contentRoot.setAttribute("aria-hidden", "true");
       }
     } else {
@@ -81,7 +80,7 @@ function NavMobile() {
         } else {
           contentRoot.removeAttribute("aria-hidden");
         }
-      } catch (error) {
+      } catch {
         contentRoot.removeAttribute("aria-hidden");
       }
     }
@@ -93,7 +92,7 @@ function NavMobile() {
         } else {
           contentRoot.removeAttribute("aria-hidden");
         }
-      } catch (error) {
+      } catch {
         contentRoot.removeAttribute("aria-hidden");
       }
     };
@@ -101,7 +100,7 @@ function NavMobile() {
 
   const closeMenu = (focusToggle = false) => {
     if (focusToggle) {
-      try { toggleRef.current?.focus(); } catch {}
+      try { toggleRef.current?.focus(); } catch { /* La navegaci?n puede continuar sin cambiar el foco. */ }
     }
     setTimeout(() => setOpen(false), 0);
   };

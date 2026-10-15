@@ -9,17 +9,14 @@ export default function Carrusel({
 }) {
   const [index, setIndex] = useState(0);
 
-  const handleNext = () => setIndex((i) => (i + 1) % items.length);
-  const handlePrev = () => setIndex((i) => (i - 1 + items.length) % items.length);
-
   const current = items[index];
   const texto = current?.texto ?? current?.descripcion ?? current?.subtitulo;
 
   useEffect(() => {
-    if (!autoPlay) return;
-    const timer = setInterval(() => handleNext(), intervalo);
+    if (!autoPlay || !items.length) return;
+    const timer = setInterval(() => setIndex((current) => (current + 1) % items.length), intervalo);
     return () => clearInterval(timer);
-  }, [index, autoPlay, intervalo]);
+  }, [items.length, autoPlay, intervalo]);
 
   if (!items || items.length === 0) return null;
 

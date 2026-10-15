@@ -1,19 +1,19 @@
 .mayorista {
   background:
-    radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.18), transparent 50%),
-    radial-gradient(circle at 80% 0%, rgba(79, 70, 229, 0.2), transparent 45%),
-    linear-gradient(135deg, #010216, #050824 70%);
+    radial-gradient(circle at 15% 20%, rgba(246, 59, 78, 0.18), transparent 50%),
+    radial-gradient(circle at 80% 0%, rgba(229, 70, 86, 0.2), transparent 45%),
+    linear-gradient(135deg, #160103, #240508 70%);
   margin: 4rem auto;
   padding: clamp(2rem, 3vw, 3rem);
   border-radius: 2rem;
   max-width: min(100%, 74rem);
   color: #fff;
-  box-shadow: 0 35px 55px rgba(0, 0, 0, 0.65), inset 0 0 2px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 35px 55px rgba(0, 0, 0, 0.65), inset 0 0 2px rgba(248, 56, 75, 0.25);
   display: grid;
   gap: 1.5rem;
   text-align: left;
   position: relative;
-  border: solid 1px rgba(56, 189, 248, 0.45);
+  border: solid 1px rgba(248, 56, 75, 0.45);
 }
 
 .mayorista-cuerpo {
@@ -40,7 +40,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  border: solid 2px rgba(56, 189, 248, 0.4);
+  border: solid 2px rgba(248, 56, 75, 0.4);
 }
 
 .mayorista h2,
@@ -49,7 +49,7 @@
   letter-spacing: 0.2rem;
   font-weight: 600;
   text-transform: uppercase;
-  text-shadow: 0 0 1.5rem rgba(56, 189, 248, 0.45);
+  text-shadow: 0 0 1.5rem rgba(248, 56, 75, 0.45);
 }
 
 .mayorista p {
@@ -60,17 +60,17 @@
 }
 
 .mayorista article {
-  background: rgba(4, 7, 33, 0.56);
+  background: rgba(33, 4, 7, 0.56);
   border-radius: 1.25rem;
   padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  box-shadow: inset 0 0 1px rgba(59, 130, 246, 0.25);
+  border: 1px solid rgba(246, 59, 78, 0.35);
+  box-shadow: inset 0 0 1px rgba(246, 59, 78, 0.25);
 }
 
 .mayorista article h3 {
   font-size: 1rem;
   margin-bottom: 0.65rem;
-  color: #e0f2fe;
+  color: #fee0e3;
 }
 
 .mayorista-condiciones ul {
@@ -93,7 +93,7 @@
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 50%;
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.9), rgba(14, 165, 233, 0.9));
+  background: linear-gradient(180deg, rgba(246, 59, 78, 0.9), rgba(233, 14, 36, 0.9));
   position: absolute;
   left: 0;
   top: 0.75rem;
@@ -105,12 +105,12 @@
   justify-content: space-evenly;
   align-items: center;
   font-family: "Orbitron", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(14, 165, 233, 0.9));
+  background: linear-gradient(135deg, rgba(246, 59, 78, 0.95), rgba(233, 14, 36, 0.9));
   width: 40%;
   border: none;
   padding: 1em !important;
   margin: 0 !important;
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 25px rgba(246, 59, 78, 0.5);
   border-radius: 1rem;
 }
 

@@ -45,8 +45,8 @@
   background: linear-gradient(
     90deg,
     transparent,
-    #4c1d95,
-    #c4b5fd,
+    #951d29,
+    #fdb5bc,
     transparent
   );
   animation: beam-scan 10s linear infinite;
@@ -102,7 +102,7 @@ body.has-fixed-nav {
   align-items: center;
   gap: 1rem;
   padding: 0.65rem 1rem;
-  background: rgba(3, 7, 25, 0.85);
+  background: rgba(25, 3, 5, 0.85);
 }
 
 .logo {
@@ -156,8 +156,8 @@ body.has-fixed-nav {
 
 /* Nivel inferior */
 .nav-bottom {
-  background: rgba(3, 7, 25, 0.7);
-  border-top: 1px solid rgba(147, 197, 253, 0.35);
+  background: rgba(25, 3, 5, 0.7);
+  border-top: 1px solid rgba(253, 147, 158, 0.35);
   padding: 0.4rem 0;
 }
 

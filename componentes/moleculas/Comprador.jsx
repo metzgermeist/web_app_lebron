@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Buscador from "../atomicos/buscador.jsx";
-import products from "../../src/data/productos.json";
+import { useCatalog } from "../../src/context/CatalogContext.jsx";
 import "../../assets/css/moleculas/comprador.css";
 
 export default function Comprador({
@@ -10,6 +10,7 @@ export default function Comprador({
   ariaLabel = "Buscar en Lebron",
   className = "",
 }) {
+  const { products } = useCatalog();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);

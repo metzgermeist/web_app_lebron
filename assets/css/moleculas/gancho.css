@@ -3,17 +3,17 @@
   position: relative;
   margin-block: clamp(24px, 6vw, 72px);
   padding-block: clamp(20px, 5vw, 48px);
-  border-top: 1px solid rgba(99, 102, 241, 0.5);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.5);
+  border-top: 1px solid rgba(241, 99, 113, 0.5);
+  border-bottom: 1px solid rgba(241, 99, 113, 0.5);
   background:
-    linear-gradient(rgba(2, 6, 32, 0.85), rgba(5, 6, 30, 0.65)),
+    linear-gradient(rgba(32, 2, 5, 0.85), rgba(30, 5, 8, 0.65)),
     var(--gancho-bg, none);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   box-shadow:
     0 25px 55px rgba(0, 0, 0, 0.7),
-    inset 0 0 40px rgba(59, 130, 246, 0.35);
+    inset 0 0 40px rgba(246, 59, 78, 0.35);
 }
 
 #gancho .container {
@@ -54,10 +54,10 @@
 .gancho-quote {
   margin: 0;
   padding: clamp(8px, 2vw, 14px) clamp(12px, 2.5vw, 18px);
-  border-left: 3px solid rgba(59, 130, 246, 0.8);
-  background: rgba(5, 6, 30, 0.75);
+  border-left: 3px solid rgba(246, 59, 78, 0.8);
+  background: rgba(30, 5, 8, 0.75);
   border-radius: 10px;
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 0 30px rgba(246, 59, 78, 0.35);
 }
 
 .gancho-quote p {
@@ -69,7 +69,7 @@
 
 .gancho-quote footer {
   margin-top: .35rem;
-  color: #cbd5e1;
+  color: #e1cbcd;
   font-size: clamp(.8rem, 1vw, .9rem);
 }
 

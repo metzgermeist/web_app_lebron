@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import products from "../data/productos.json";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import TarjetaProducto from "../../componentes/atomicos/tarjetaproductos.jsx";
 import "../../assets/css/atomicos/tarjetaproducto.css";
 import "../../assets/css/pages/Generica.css";
 
 export default function Generica() {
+  const { products } = useCatalog();
   const { nombre } = useParams();
 
   const { slug, title, items, groupedByCategory, isCategorySlug, isBrandView } = useMemo(() => {
@@ -81,7 +82,7 @@ export default function Generica() {
     }
 
     return { slug, title, items, groupedByCategory, isCategorySlug, isBrandView };
-  }, [nombre]);
+  }, [nombre, products]);
 
   return (
     <main className="section" style={{ padding: "2rem 1rem" }}>

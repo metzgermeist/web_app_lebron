@@ -1,24 +1,25 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import products from "../data/productos.json";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import ProductosDestacados from "../../componentes/atomicos/productosDestacados.jsx";
 import "../../assets/css/pages/detalle.css";
 import Boton from "../../componentes/atomicos/boton.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
 export default function Detalle() {
+  const { products, loading, error } = useCatalog();
   const { id } = useParams();
   const producto = useMemo(() => {
     return (products || []).find((item) => String(item.id) === String(id));
-  }, [id]);
+  }, [id, products]);
 
-  if (!producto) {
-    return (
-      <main className="detalle-page">
-        <p className="detalle-empty">No encontramos ese producto.</p>
-      </main>
-    );
-  }
+  if (loading || error) return <main className="detalle-page"><p>{loading ? 'Cargando producto…' : 'No se pudo consultar el producto.'}</p></main>;
+  return producto ? <DetalleProducto key={producto.id} producto={producto} /> : (
+    <main className="detalle-page"><p className="detalle-empty">No encontramos ese producto.</p></main>
+  );
+}
+
+function DetalleProducto({ producto }) {
 
   const {
     nombre,
@@ -36,26 +37,23 @@ export default function Detalle() {
   const colorOptions = useMemo(() => (Array.isArray(producto.colores) ? producto.colores : []), [producto.colores]);
   const materialOptions = useMemo(() => (Array.isArray(producto.materiales) ? producto.materiales : []), [producto.materiales]);
 
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedFlavor, setSelectedFlavor] = useState("");
-  const [selectedVersion, setSelectedVersion] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedMaterial, setSelectedMaterial] = useState("");
+  const [selectedSize, setSelectedSize] = useState(tamanos[0] || "");
+  const [selectedFlavor, setSelectedFlavor] = useState(sabores[0] || "");
+  const [selectedVersion, setSelectedVersion] = useState(versionOptions[0] || "");
+  const [selectedColor, setSelectedColor] = useState(colorOptions[0] || "");
+  const [selectedMaterial, setSelectedMaterial] = useState(materialOptions[0] || "");
   const navigate = useNavigate();
   const { addItem } = useCart();
 
   useEffect(() => {
-    setSelectedSize(tamanos.length ? tamanos[0] : "");
-    setSelectedFlavor(sabores.length ? sabores[0] : "");
-    setSelectedVersion(versionOptions.length ? versionOptions[0] : "");
-    setSelectedColor(colorOptions.length ? colorOptions[0] : "");
-    setSelectedMaterial(materialOptions.length ? materialOptions[0] : "");
+    setSelectedSize(current => tamanos.includes(current) ? current : tamanos[0] || "");
+    setSelectedFlavor(current => sabores.includes(current) ? current : sabores[0] || "");
+    setSelectedVersion(current => versionOptions.includes(current) ? current : versionOptions[0] || "");
+    setSelectedColor(current => colorOptions.includes(current) ? current : colorOptions[0] || "");
+    setSelectedMaterial(current => materialOptions.includes(current) ? current : materialOptions[0] || "");
   }, [tamanos, sabores, versionOptions, colorOptions, materialOptions]);
 
-  const precioSeleccionado =
-    selectedSize && preciosPorTamano && preciosPorTamano[selectedSize]
-      ? preciosPorTamano[selectedSize]
-      : precio;
+  const precioSeleccionado = preciosPorTamano[selectedSize] ?? precio;
   const formattedPrice =
     typeof precioSeleccionado === "number"
       ? precioSeleccionado.toLocaleString("es-AR")
@@ -171,11 +169,11 @@ export default function Detalle() {
             disponibilidad de stock.
           </p>
           <article className="detalle-actions">
-            <Boton variant="primary" onClick={handleAddToCart} altText="Agregar al carrito">
+            <Boton variant="primary" onClick={handleAddToCart} altText="Agregar al carrito" disabled={stock <= 0 || producto.disponible === false}>
               Agregar al carrito
             </Boton>
-            <Boton onClick={handleComprar} altText="Ir a facturación">
-              Comprar
+            <Boton onClick={handleComprar} effect={false} disabled={stock <= 0 || producto.disponible === false}>
+              Continuar pedido
             </Boton>
           </article>
         </article>

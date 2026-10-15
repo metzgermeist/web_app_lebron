@@ -9,7 +9,7 @@
   padding: 1rem;
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(2, 0, 104, 0.04));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(104, 0, 10, 0.04));
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
 
@@ -30,7 +30,7 @@
 }
 
 .generica-category__count {
-  color: #cbd5e1;
+  color: #e1cbcd;
   font-size: 0.9rem;
   white-space: nowrap;
 }

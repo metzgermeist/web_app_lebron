@@ -1,10 +1,10 @@
 :root {
   --lb-cart-gradient:
     radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.15), transparent 58%),
-    linear-gradient(145deg, rgba(79, 70, 229, 0.95), rgba(15, 23, 42, 0.95));
+    linear-gradient(145deg, rgba(229, 70, 86, 0.95), rgba(42, 15, 18, 0.95));
   --lb-cart-shadow:
-    0 6px 22px rgba(59, 130, 246, 0.45);
-  --lb-cart-border: 1px solid rgba(59, 130, 246, 0.7);
+    0 6px 22px rgba(246, 59, 78, 0.45);
+  --lb-cart-border: 1px solid rgba(246, 59, 78, 0.7);
 }
 
 .lb-cart-btn {
@@ -37,9 +37,9 @@
 .lb-cart-btn:hover,
 .lb-cart-btn:focus-visible {
   transform: translateY(-2px);
-  border-color: rgba(99, 102, 241, 0.95);
+  border-color: rgba(241, 99, 113, 0.95);
   box-shadow:
-    0 0 18px rgba(59, 130, 246, 0.65),
+    0 0 18px rgba(246, 59, 78, 0.65),
     inset 0 0 12px rgba(255, 255, 255, 0.2);
 }
 

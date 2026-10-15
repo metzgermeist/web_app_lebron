@@ -153,14 +153,14 @@
   inset: 0;
   border-radius: var(--card-r);
   background:
-    radial-gradient(140% 160% at 80% 10%, rgba(18, 24, 74, 0.55), transparent 68%),
-    radial-gradient(120% 100% at 0% 100%, rgba(2, 6, 23, 0.7), transparent 72%),
-    linear-gradient(var(--card-back-angle), #04030a, #060919);
+    radial-gradient(140% 160% at 80% 10%, rgba(74, 18, 24, 0.55), transparent 68%),
+    radial-gradient(120% 100% at 0% 100%, rgba(23, 2, 4, 0.7), transparent 72%),
+    linear-gradient(var(--card-back-angle), #0a0304, #190608);
   transform: rotateY(180deg);
   display: grid;
   place-items: center;
   padding: 1rem;
-  color: #f8fafc;
+  color: #fcf8f8;
 }
 
 .lb-card-back::before {

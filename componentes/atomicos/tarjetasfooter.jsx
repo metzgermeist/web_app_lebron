@@ -3,10 +3,8 @@ import RedesSocialesBoton from "./redesSocialesBoton.jsx";
 
 const branches = [
   { title: "Casa Central", addr: "Av. Mitre 564", wa: "543816337883", aria: "Casa Central" },
-  { title: "Sucursal Buenos Aires", addr: "Buenos Aires 42", wa: "543815783395", aria: "Buenos Aires 42" },
   { title: "Sucursal 25 de Mayo", addr: "25 de Mayo 762", wa: "543814156163", aria: "25 de Mayo 762" },
   { title: "Sucursal Lules", addr: "Belgrano 354", wa: "543816312150", aria: "Lules" },
-  { title: "Sucursal Yerba Buena", addr: "Av. Aconquija 500", wa: "5493813037170" },
 ];
 
 function TarjetasFooter() {

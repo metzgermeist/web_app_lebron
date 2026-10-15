@@ -3,8 +3,8 @@
     --carrusel-bg-overlay: rgba(0, 0, 0, 0.72);
     --carrusel-color-text: #ffffff;
     --carrusel-color-sub: #dddddd;
-    --carrusel-color-accent: #6366f1;
-    /* azul/violeta */
+    --carrusel-color-accent: #f16371;
+    /* rojo */
     --carrusel-shadow-accent: 0 0 1.5rem var(--carrusel-color-accent);
 
     /* Tipografía */

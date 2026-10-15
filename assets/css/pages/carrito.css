@@ -20,7 +20,7 @@
     align-items: center;
     gap: 1rem;
     padding: .5rem 0;
-    color: #dbeafe;
+    color: #fedbdf;
     font-weight: 700;
     text-transform: uppercase;
     font-size: .9rem;
@@ -29,14 +29,14 @@
 
 .cart-left {
     background:
-        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.2), transparent 40%),
-        linear-gradient(180deg, rgba(2, 6, 32, 0.95), rgba(5, 6, 30, 0.85));
-    border: 1px solid rgba(56, 189, 248, 0.35);
+        radial-gradient(circle at 15% 20%, rgba(246, 59, 78, 0.2), transparent 40%),
+        linear-gradient(180deg, rgba(32, 2, 5, 0.95), rgba(30, 5, 8, 0.85));
+    border: 1px solid rgba(248, 56, 75, 0.35);
     border-radius: 14px;
     padding: 1rem;
     box-shadow:
         0 12px 30px rgba(0, 0, 0, .45),
-        inset 0 0 1px rgba(59, 130, 246, 0.35);
+        inset 0 0 1px rgba(246, 59, 78, 0.35);
 }
 
 .cart-list {
@@ -49,7 +49,7 @@
 }
 
 .cart-empty {
-    color: #a5b4fc;
+    color: #fca5ae;
     margin: 1rem 0;
 }
 
@@ -58,7 +58,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    border-top: 1px solid rgba(99, 102, 241, 0.3);
+    border-top: 1px solid rgba(241, 99, 113, 0.3);
     padding-top: 1rem;
 }
 
@@ -80,8 +80,8 @@
     border-radius: 10px;
     overflow: hidden;
     background:
-        linear-gradient(145deg, rgba(2, 6, 32, 0.95), rgba(59, 102, 241, 0.4)),
-        radial-gradient(circle at 30% 20%, rgba(79, 70, 229, 0.5), transparent 55%);
+        linear-gradient(145deg, rgba(32, 2, 5, 0.95), rgba(241, 59, 77, 0.4)),
+        radial-gradient(circle at 30% 20%, rgba(229, 70, 86, 0.5), transparent 55%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,7 +107,7 @@
 }
 
 .ci-price {
-    color: #e0f2fe;
+    color: #fee0e3;
     margin: 0;
     letter-spacing: 0.1em;
 }
@@ -138,39 +138,39 @@
     font-weight: 700;
     text-align: right;
     min-width: 92px;
-    color: #dbeafe;
+    color: #fedbdf;
 }
 
 .ci-stock-msg {
     display: block;
     margin-top: .25rem;
-    color: #38bdf8;
+    color: #f8384b;
     font-size: .85rem;
 }
 
 .cart-right {
     background:
-        radial-gradient(circle at 20% -10%, rgba(59, 130, 246, 0.35), transparent 45%),
-        linear-gradient(180deg, rgba(3, 7, 25, 0.95), rgba(2, 6, 32, 0.9));
-    border: 1px solid rgba(99, 102, 241, 0.45);
+        radial-gradient(circle at 20% -10%, rgba(246, 59, 78, 0.35), transparent 45%),
+        linear-gradient(180deg, rgba(25, 3, 5, 0.95), rgba(32, 2, 5, 0.9));
+    border: 1px solid rgba(241, 99, 113, 0.45);
     border-radius: 14px;
     padding: 1rem;
     box-shadow:
         0 12px 30px rgba(0, 0, 0, .55),
-        inset 0 0 1px rgba(59, 130, 246, 0.35);
+        inset 0 0 1px rgba(246, 59, 78, 0.35);
     width: 100%;
-    color: #e0f2fe;
+    color: #fee0e3;
 }
 
 .cr-title {
     margin-top: 0;
     font-size: 1.1rem;
-    color: #e0f2fe;
+    color: #fee0e3;
     opacity: .95;
 }
 
 .cr-cupon {
-    border-top: 1px solid rgba(99, 102, 241, 0.4);
+    border-top: 1px solid rgba(241, 99, 113, 0.4);
     padding-top: .75rem;
 }
 
@@ -182,23 +182,23 @@
 
 .cr-cupon-row input {
     flex: 1;
-    border: 1px solid rgba(99, 102, 241, 0.35);
-    background: rgba(2, 6, 32, 0.75);
-    color: #e5e7eb;
+    border: 1px solid rgba(241, 99, 113, 0.35);
+    background: rgba(32, 2, 5, 0.75);
+    color: #ebe5e6;
     border-radius: 10px;
     padding: .6rem .8rem;
 }
 
 .cr-cupon-row input::placeholder {
-    color: rgba(224, 226, 255, 0.5);
+    color: rgba(255, 224, 227, 0.5);
 }
 
 .cr-cupon-row input:focus {
     outline: none;
-    border-color: rgba(99, 102, 241, 0.9);
+    border-color: rgba(241, 99, 113, 0.9);
     box-shadow:
-        0 0 0 3px rgba(59, 130, 246, 0.3),
-        inset 0 0 1px rgba(99, 102, 241, 0.25);
+        0 0 0 3px rgba(246, 59, 78, 0.3),
+        inset 0 0 1px rgba(241, 99, 113, 0.25);
 }
 
 .cr-row {
@@ -207,11 +207,11 @@
     align-items: center;
     font-size: 1.1rem;
     margin-top: 1rem;
-    color: #e0f2fe;
+    color: #fee0e3;
 }
 
 .cr-discount {
-    color: #38bdf8;
+    color: #f8384b;
     font-size: .95rem;
 }
 

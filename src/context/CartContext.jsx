@@ -1,128 +1,64 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import productos from "../data/productos.json";
+﻿import { createContext, useContext, useEffect, useState } from "react";
+import { useCatalog } from "./CatalogContext.jsx";
+import { addToCart, normalizeCart, stockAvailable, reconcileCart } from "../utils/cart.js";
 
 const CartContext = createContext(null);
-
-const STORAGE_KEY = "cart";
-
 export function CartProvider({ children }) {
+  const { products, loading, error } = useCatalog();
+  const [catalogNotice, setCatalogNotice] = useState('');
+  const getStock = (id) => {
+    const product = products.find(product => String(product.id) === String(id));
+    return !loading && !error && product?.disponible !== false ? Math.max(0, product?.stock ?? 0) : 0;
+  };
   const [items, setItems] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
+    try { return normalizeCart(JSON.parse(localStorage.getItem("cart") || "[]")); }
+    catch { return []; }
+  });
+  const [couponCode, setCouponCode] = useState(() => {
+    try { return localStorage.getItem("cart-coupon") || ""; }
+    catch { return ""; }
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {
-      // ignore
+    if (loading || error) return;
+    const current = reconcileCart(items, products);
+    if (JSON.stringify(current) !== JSON.stringify(items)) {
+      setItems(current);
+      setCatalogNotice('Actualizamos tu carrito según el catálogo: revisá los precios, las cantidades y los productos disponibles antes de continuar.');
     }
-  }, [items]);
+  }, [products, loading, error, items]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("cart", JSON.stringify(items));
+      localStorage.setItem("cart-coupon", couponCode);
+    } catch { /* El carrito sigue funcionando si el navegador no permite guardarlo. */ }
+  }, [items, couponCode]);
 
   const addItem = (product, qty = 1) => {
-    if (!product || !product.id) return;
-    const getStockFor = (id) => {
-      const p = productos.find((x) => String(x.id) === String(id));
-      return Math.max(0, p?.stock ?? Number.MAX_SAFE_INTEGER);
-    };
-    setItems((prev) => {
-      const next = [...prev];
-      const ix = next.findIndex((i) => String(i.id) === String(product.id));
-      const max = getStockFor(product.id);
-      if (ix !== -1) {
-        const newQty = Math.min(max, Math.max(1, (next[ix].qty || 1) + qty));
-        next[ix] = { ...next[ix], qty: newQty, stock: max };
-      } else {
-        const base = {
-          id: product.id,
-          nombre: product.nombre,
-          precio: product.precio,
-          imagen: product.imagen,
-          stock: max,
-        };
-        next.push({ ...base, qty: Math.min(max, Math.max(1, qty)) });
-      }
-      return next;
-    });
+    if (!product) return;
+    setItems((previous) => addToCart(previous, product, qty, getStock(product.id)));
   };
-
-  const updateQty = (id, qty) => {
-    const getStockFor = (pid) => {
-      const p = productos.find((x) => String(x.id) === String(pid));
-      return Math.max(0, p?.stock ?? Number.MAX_SAFE_INTEGER);
-    };
-    setItems((prev) => {
-      const next = prev
-        .map((i) => {
-          if (String(i.id) !== String(id)) return i;
-          const max = i.stock ?? getStockFor(id);
-          const clamped = Math.min(max, Math.max(0, qty));
-          return { ...i, qty: clamped, stock: max };
-        })
-        .filter((i) => i.qty > 0);
-      return next;
-    });
+  const updateQty = (key, qty) => {
+    if (!Number.isInteger(qty)) return;
+    setItems((previous) => previous.map((item) => item.cartKey === key
+      ? { ...item, qty: Math.max(0, Math.min(qty,
+        stockAvailable(previous, item, getStock(item.id)))) } : item)
+      .filter((item) => item.qty > 0));
   };
+  const removeItem = (key) => setItems((previous) => previous.filter((item) => item.cartKey !== key));
+  const clear = () => { setItems([]); setCouponCode(""); };
+  const count = items.reduce((sum, item) => sum + item.qty, 0);
+  const total = items.reduce((sum, item) => sum + item.precio * item.qty, 0);
+  const couponDiscount = couponCode.trim().toUpperCase() === "LEBRON10" ? total * 0.1 : 0;
+  const totalWithDiscount = Math.max(0, total - couponDiscount);
 
-  const removeItem = (id) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
-  };
-
-  const clear = () => setItems([]);
-
-  const [couponCode, setCouponCode] = useState("");
-
-  const calculateCouponDiscount = (rawTotal, code) => {
-    if (!code) return 0;
-    if (code.trim().toUpperCase() === "LEBRON10") {
-      return rawTotal * 0.1;
-    }
-    return 0;
-  };
-
-  const { count, total } = useMemo(() => {
-    const count = items.reduce((acc, i) => acc + (i.qty || 1), 0);
-    const total = items.reduce((acc, i) => acc + (i.precio || 0) * (i.qty || 1), 0);
-    return { count, total };
-  }, [items]);
-
-  const couponDiscount = useMemo(
-    () => calculateCouponDiscount(total, couponCode),
-    [total, couponCode]
-  );
-
-  const totalWithDiscount = useMemo(
-    () => Math.max(0, total - couponDiscount),
-    [total, couponDiscount]
-  );
-
-  const applyCoupon = (code) => {
-    setCouponCode(code);
-  };
-
-  const value = useMemo(
-    () => ({
-      items,
-      addItem,
-      updateQty,
-      removeItem,
-      clear,
-      count,
-      total,
-      couponCode,
-      couponDiscount,
-      totalWithDiscount,
-      applyCoupon,
-    }),
-    [items, count, total, couponCode, couponDiscount, totalWithDiscount]
-  );
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return <CartContext.Provider value={{ items, addItem, updateQty, removeItem, clear,
+    count, total, couponCode, couponDiscount, totalWithDiscount, applyCoupon: setCouponCode, catalogNotice }}>
+    {children}
+  </CartContext.Provider>;
 }
 
+// El contexto y su hook comparten módulo para conservar la API de los componentes.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);

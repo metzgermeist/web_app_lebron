@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import products from "../data/productos.json";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import "../../assets/css/pages/Marcas.css";
 
 export default function Marcas() {
+  const { products } = useCatalog();
   const { brands } = useMemo(() => {
     const norm = (s) => (s || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const pretty = (s) => (s || "").replace(/[-_]/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
@@ -21,14 +22,14 @@ export default function Marcas() {
       a.name.localeCompare(b.name, "es", { sensitivity: "base" }),
     );
     return { brands: list };
-  }, []);
+  }, [products]);
 
   return (
     <main className="section" style={{ padding: "2rem 1rem" }}>
       <section className="container" style={{ maxWidth: 960, marginInline: "auto" }}>
         <header style={{ textAlign: "center", marginBottom: "1rem" }}>
           <h2 style={{ margin: 0 }}>Marcas</h2>
-          <p style={{ margin: ".25rem 0 0", color: "#cbd5e1" }}>{brands.length} marcas encontradas</p>
+          <p style={{ margin: ".25rem 0 0", color: "#e1cbcd" }}>{brands.length} marcas encontradas</p>
         </header>
 
         <ul className="marcas-grid">

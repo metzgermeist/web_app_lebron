@@ -1,0 +1,43 @@
+﻿.pedido-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1rem 4rem; color: #ebe5e6; }
+.pedido-header { text-align: center; margin-bottom: 2.5rem; }
+.pedido-header h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); }
+.pedido-header p { color: #dbb9bc; line-height: 1.6; }
+.pedido-eyebrow { font-size: .8rem; letter-spacing: .15em; color: #fca5ae !important; }
+.pedido-steps { display: flex; justify-content: center; flex-wrap: wrap; gap: .75rem 1.5rem; margin-top: 1.5rem; font-size: .85rem; }
+.pedido-page a { color: #fca5ae; }
+.pedido-steps [aria-current] { color: #fff; border-bottom: 2px solid #f8818d; padding-bottom: .3rem; }
+.pedido-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.pedido-fields { display: grid; gap: 1.5rem; min-width: 0; }
+.pedido-panel { min-width: 0; margin: 0; padding: 1.5rem; border: 1px solid #6c383d; border-radius: 18px; background: linear-gradient(145deg, #301114, #1c0709); box-shadow: 0 12px 32px #0003; }
+.pedido-panel legend { padding: 0 .5rem; font-size: 1.1rem; font-weight: 700; }
+.pedido-panel p, .pedido-panel small { color: #dbb9bc; line-height: 1.6; }
+.pedido-panel p { margin: .4rem 0 1rem; }
+.pedido-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.pedido-options label { display: flex; align-items: center; gap: .6rem; padding: 1rem .75rem; border: 1px solid #674145; border-radius: 10px; cursor: pointer; line-height: 1.4; }
+.pedido-options .is-selected { background: #78303766; border-color: #fca5ae; }
+.pedido-options input { accent-color: #fca5ae; flex-shrink: 0; }
+.pedido-contact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+.pedido-field { display: grid; gap: .5rem; margin: 1rem 0; line-height: 1.4; }
+.pedido-wide { grid-column: 1 / -1; }
+.pedido-field input, .pedido-field textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: .85rem; border: 1px solid #72474b; border-radius: 8px; background: #1d0608; color: #fff; font: inherit; }
+.pedido-field textarea { resize: vertical; }
+.pedido-page :focus-visible { outline: 2px solid #fca5ae; outline-offset: 4px; }
+.pedido-summary h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+.pedido-items { list-style: none; padding: 0; margin: 1rem 0; }
+.pedido-items li { display: grid; gap: .4rem; padding: 1rem 0; border-bottom: 1px solid #593438; overflow-wrap: anywhere; }
+.pedido-items li > span { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
+.pedido-totals { margin: 1.5rem 0; }
+.pedido-totals > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; padding: .5rem 0; }
+.pedido-totals dd { margin: 0; }
+.pedido-total { font-weight: 700; font-size: 1.1rem; }
+.pedido-page .pedido-button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .9rem 1rem; border-radius: 10px; background: #e54656; color: #fff; text-align: center; text-decoration: none; font-size: .9rem; line-height: 1.6; }
+.pedido-page .pedido-whatsapp { display: flex; background: #167344; margin: 1.2rem 0 .7rem; }
+.pedido-page button.pedido-whatsapp { width:100%; border:0; cursor:pointer; }
+.pedido-page button.pedido-whatsapp:disabled { opacity:.6; cursor:wait; }
+.pedido-whatsapp:hover { background: #1a8450; }
+.pedido-preview { border-top: 1px solid #593438; margin-top: 1.2rem; padding-top: 1rem; }
+.pedido-preview summary { cursor: pointer; color: #fca5ae; }
+.pedido-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: .85rem; line-height: 1.65; }
+.pedido-empty { text-align: center; }
+@media (max-width: 850px) { .pedido-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) { .pedido-panel { padding: 1rem; } .pedido-options, .pedido-contact { grid-template-columns: minmax(0, 1fr); } .pedido-steps { font-size: .7rem; gap: .75rem; } }

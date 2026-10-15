@@ -1,678 +1,131 @@
-﻿import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
-
-/* Tus componentes modulares */
-import MetodoDePago from "../../componentes/facturacion/MetodoDePago.jsx";
-import FormularioTarjeta from "../../componentes/facturacion/FormularioTarjeta.jsx";
-import DatosPersonales from "../../componentes/facturacion/DatosPersonales.jsx";
-import Cuotas from "../../componentes/facturacion/Cuotas.jsx";
-import EnvioRetiro from "../../componentes/facturacion/EnvioRetiro.jsx";
-import Resumen from "../../componentes/facturacion/Resumen.jsx";
-
-/* Botón */
-import Boton from "../../componentes/atomicos/boton.jsx";
-
-/* CSS */
-import "../../assets/css/pages/facturacion.css";
-
-/* MÉTODOS DE PAGO */
-const paymentMethods = [
-  { id: "efectivo", label: "Efectivo" },
-  { id: "transferencia", label: "Transferencia bancaria" },
-  { id: "tarjetaDebito", label: "Tarjeta de débito" },
-  { id: "tarjetaCredito", label: "Tarjeta de crédito" },
-];
-
-/* ZONAS DE ENVÍO */
-const shippingZones = [
-  {
-    id: "cercana",
-    label: "Zona céntrica",
-    description: "Hasta 5 km del local, sin costo adicional.",
-    cost: 0,
-  },
-  {
-    id: "periferica",
-    label: "Zona periurbana",
-    description: "Entre 5 y 15 km, costo fijo moderado.",
-    cost: 450,
-  },
-  {
-    id: "remota",
-    label: "Zona remota",
-    description: "Más de 15 km, soporta el viaje largo.",
-    cost: 900,
-  },
-];
-
-const defaultShippingOption = "retiro";
-const defaultDeliveryZone = "cercana";
-
-/* SANITIZACIÓN Y VALIDACIONES (TODAS LAS ORIGINALES) */
-const sanitizeText = (value) =>
-  (value || "")
-    .replace(/[<>]/g, "")
-    .replace(/script/gi, "")
-    .trim()
-    .slice(0, 60);
-
-const sanitizeDigits = (value) => (value || "").replace(/\D/g, "");
-const lettersAndSpaces = /[^\p{L}\s]/gu;
-
-const CARD_NUMBER_AUTO_FOCUS_DIGITS = 16;
-const EXPIRY_AUTO_FOCUS_DIGITS = 4;
-
-const sanitizeCardholder = (value) =>
-  (value || "")
-    .toUpperCase()
-    .replace(lettersAndSpaces, "")
-    .replace(/\s{2,}/g, " ")
-    .replace(/^\s+/, "")
-    .slice(0, 40);
-
-const sanitizeContactName = (value) =>
-  (value || "")
-    .replace(lettersAndSpaces, "")
-    .replace(/\s{2,}/g, " ")
-    .replace(/^\s+/, "")
-    .slice(0, 60);
-
-const sanitizeAddress = (value) =>
-  (value || "")
-    .replace(/[^A-Za-z0-9\s]/g, "")
-    .replace(/\s{2,}/g, " ")
-    .trim()
-    .slice(0, 100);
-
-const sanitizeContactField = (field, value) => {
-  if (field === "nombre") return sanitizeContactName(value);
-  if (field === "telefono") return sanitizeDigits(value).slice(0, 15);
-  if (field === "direccion") return sanitizeAddress(value);
-  return sanitizeText(value);
-};
-
-const sanitizeExpiryDigits = (value) => sanitizeDigits(value).slice(0, 4);
-
-const luhnCheck = (digits) => {
-  const reversed = (digits || "").split("").reverse();
-  const sum = reversed.reduce((acc, curr, index) => {
-    const num = Number(curr) || 0;
-    const shouldDouble = index % 2 === 1;
-    const doubled = shouldDouble ? num * 2 : num;
-    return acc + (doubled > 9 ? doubled - 9 : doubled);
-  }, 0);
-  return sum % 10 === 0;
-};
-
-const validateCardField = (field, value) => {
-  if (field === "titular") {
-    const normalized = (value || "").trim();
-    if (!normalized) return "Completá el titular.";
-    if (normalized.length < 5) return "Al menos 5 caracteres.";
-    if (normalized.length > 40) return "Máximo 40 caracteres.";
-    if (!/^[A-ZÁÉÍÓÚÜÑ\s]+$/.test(normalized))
-      return "Solo letras y espacios.";
-    return "";
-  }
-
-  if (field === "numero") {
-    if (!value) return "Completá el número de tarjeta.";
-    if (value.length < 13) return "Al menos 13 dígitos.";
-    if (value.length > 19) return "Máximo 19 dígitos.";
-    if (!luhnCheck(value)) return "Número inválido.";
-    return "";
-  }
-
-  if (field === "vencimiento") {
-    if (!value) return "Completá el vencimiento.";
-    if (value.length !== 4) return "Usá el formato MM/AA.";
-
-    const month = Number(value.slice(0, 2));
-    const year = Number(value.slice(2, 4));
-
-    if (isNaN(month) || month < 1 || month > 12)
-      return "Mes inválido.";
-
-    const current = new Date();
-    const normalizedYear = 2000 + (year || 0);
-    const cardDate = new Date(normalizedYear, month - 1, 1);
-    const cutoff = new Date(
-      current.getFullYear(),
-      current.getMonth(),
-      1
-    );
-
-    if (cardDate < cutoff) return "La tarjeta está vencida.";
-    return "";
-  }
-
-  if (field === "cvc") {
-    if (!value) return "Ingresá el CVV.";
-    if (value.length < 3) return "Al menos 3 dígitos.";
-    if (value.length > 4) return "Máximo 4 dígitos.";
-    return "";
-  }
-
-  return "";
-};
-
-const validateContactField = (field, value) => {
-  if (field === "nombre") {
-    const normalized = (value || "").trim();
-    if (!normalized) return "Completá tu nombre.";
-    if (normalized.length < 3) return "Mínimo 3 caracteres.";
-    if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/.test(normalized))
-      return "Solo letras y espacios.";
-    return "";
-  }
-
-  if (field === "telefono") {
-    if (!value) return "Ingresá un teléfono.";
-    if (value.length < 8) return "Al menos 8 dígitos.";
-    if (value.length > 15) return "Hasta 15 dígitos.";
-    return "";
-  }
-
-  if (field === "direccion") {
-    if (!value) return "Ingresá la dirección.";
-    if (value.length < 5) return "Al menos 5 caracteres.";
-    if (!/^[A-Za-z0-9\s]+$/.test(value))
-      return "Solo letras, números y espacios.";
-    return "";
-  }
-
-  return "";
-};
-
-/* ESTADOS INICIALES */
-const initialCardState = {
-  titular: "",
-  numero: "",
-  vencimiento: "",
-  cvc: "",
-};
-
-const initialCardErrors = {
-  titular: "",
-  numero: "",
-  vencimiento: "",
-  cvc: "",
-};
-
-const initialContactErrors = {
-  nombre: "",
-  telefono: "",
-  direccion: "",
-};
-
-/* ------------------------------------------------- */
-/*                 COMPONENTE PRINCIPAL             */
-/* ------------------------------------------------- */
+import { buildOrderMessage, buildWhatsAppUrl, money, paymentMethods, variantText } from "../utils/pedido.js";
+import "../../assets/css/pages/pedido.css";
+import { useCatalog } from "../context/CatalogContext.jsx";
+import { reconcileCart } from "../utils/cart.js";
 
 export default function Facturacion() {
-  const {
-    items,
-    total,
-    couponDiscount,
-    totalWithDiscount,
-    couponCode,
-  } = useCart();
-
-  /* ESTADOS */
-  const [paymentMethod, setPaymentMethod] = useState(null);
-  const [installments, setInstallments] = useState("1");
-  const [shippingOption, setShippingOption] = useState(defaultShippingOption);
-  const [deliveryZone, setDeliveryZone] = useState(defaultDeliveryZone);
-
-  const [contact, setContact] = useState({
-    nombre: "",
-    telefono: "",
-    direccion: "",
-  });
-
-  const [card, setCard] = useState(initialCardState);
-  const [contactErrors, setContactErrors] = useState(initialContactErrors);
-  const [cardErrors, setCardErrors] = useState(initialCardErrors);
-
-  const refNumero = useRef(null);
-  const refVencimiento = useRef(null);
-  const refCvc = useRef(null);
-
-  const [status, setStatus] = useState({ type: "", message: "" });
-
-  /* LÓGICAS DE VISIBILIDAD */
-  const cardRequired =
-    paymentMethod === "tarjetaCredito" ||
-    paymentMethod === "tarjetaDebito";
-
-  const hasContactErrors = Object.values(contactErrors).some(Boolean);
-  const hasCardErrors = Object.values(cardErrors).some(Boolean);
-
-  const contactValuesComplete =
-    contact.nombre.length >= 3 &&
-    contact.telefono.length >= 8 &&
-    (shippingOption === "envio"
-      ? contact.direccion.length >= 5
-      : true);
-
-  const cardValuesComplete = cardRequired
-    ? card.titular.length >= 5 &&
-      card.numero.length >= 13 &&
-      card.vencimiento.length === 4 &&
-      card.cvc.length >= 3
-    : true;
-
-  const cardSectionComplete =
-    cardRequired && cardValuesComplete && !hasCardErrors;
-
-  const personalSectionComplete =
-    contactValuesComplete && !hasContactErrors;
-
-  const readyForStage3 =
-    contactValuesComplete &&
-    !hasContactErrors &&
-    (!cardRequired ||
-      (cardValuesComplete && !hasCardErrors));
-
-  /* DEFINICIÓN DE ETAPAS */
-  const stage = paymentMethod
-    ? readyForStage3
-      ? 3
-      : 2
-    : 1;
-
-  const personalStageVisible = cardRequired
-    ? cardSectionComplete
-    : stage >= 2;
-
-  const cuotasStageVisible =
-    paymentMethod === "tarjetaCredito" &&
-    personalStageVisible &&
-    personalSectionComplete;
-
-  /* CÁLCULOS */
-  const subtotal = useMemo(
-    () => Math.max(0, totalWithDiscount || 0),
-    [totalWithDiscount]
-  );
-
-  const paymentDiscount =
-    paymentMethod === "transferencia"
-      ? subtotal * 0.05
-      : 0;
-
-  const zoneData = useMemo(
-    () =>
-      shippingZones.find((z) => z.id === deliveryZone) ??
-      shippingZones[0],
-    [deliveryZone]
-  );
-
-  const shippingCost =
-    shippingOption === "envio" ? zoneData.cost : 0;
-
-  const amountBeforeInterest = Math.max(
-    0,
-    subtotal + shippingCost - paymentDiscount
-  );
-
-  const numericInstallments = Math.min(
-    24,
-    Math.max(1, Number(installments) || 1)
-  );
-
-  const interestRatePerInstallment =
-    paymentMethod === "tarjetaCredito" ? 0.018 : 0;
-
-  const interestAmount =
-    paymentMethod === "tarjetaCredito" &&
-    numericInstallments > 1
-      ? amountBeforeInterest *
-        interestRatePerInstallment *
-        numericInstallments
-      : 0;
-
-  const finalTotal = amountBeforeInterest + interestAmount;
-
-  const activeInstallments =
-    paymentMethod === "tarjetaCredito"
-      ? numericInstallments
-      : 1;
-
-  const installmentValue =
-    activeInstallments > 1
-      ? finalTotal / activeInstallments
-      : finalTotal;
-
-  const disableSubmit = stage < 3 || !items.length;
-
-  /* ------------------------------------------------- */
-  /*               HANDLERS / EVENTOS                   */
-  /* ------------------------------------------------- */
-
-  const handlePaymentMethodSelect = (methodId) => {
-    if (methodId === paymentMethod) return;
-
-    setPaymentMethod(methodId);
-    setCard(initialCardState);
-    setCardErrors(initialCardErrors);
-
-    if (methodId !== "tarjetaCredito") {
-      setInstallments("1");
-    }
-
-    setStatus({ type: "", message: "" });
-  };
-
-  const handleContactChange = (field, rawValue) => {
-    const sanitized = sanitizeContactField(field, rawValue);
-    setContact((prev) => ({ ...prev, [field]: sanitized }));
-
-    setContactErrors((prev) => ({
-      ...prev,
-      [field]: validateContactField(field, sanitized),
-    }));
-  };
-
-  const handleCardChange = (field, rawValue) => {
-    const sanitized =
-      field === "titular"
-        ? sanitizeCardholder(rawValue)
-        : field === "numero"
-        ? sanitizeDigits(rawValue).slice(0, 19)
-        : field === "vencimiento"
-        ? sanitizeExpiryDigits(rawValue)
-        : sanitizeDigits(rawValue).slice(0, 4);
-
-    const previousValue = card[field] || "";
-
-    setCard((prev) => ({ ...prev, [field]: sanitized }));
-
-    setCardErrors((prev) => ({
-      ...prev,
-      [field]: validateCardField(field, sanitized),
-    }));
-
-    if (
-      field === "numero" &&
-      previousValue.length < CARD_NUMBER_AUTO_FOCUS_DIGITS &&
-      sanitized.length >= CARD_NUMBER_AUTO_FOCUS_DIGITS
-    ) {
-      if (refVencimiento.current) {
-        setTimeout(() => refVencimiento.current?.focus(), 0);
-      }
-    }
-
-    if (
-      field === "vencimiento" &&
-      previousValue.length < EXPIRY_AUTO_FOCUS_DIGITS &&
-      sanitized.length >= EXPIRY_AUTO_FOCUS_DIGITS
-    ) {
-      if (refCvc.current) {
-        setTimeout(() => refCvc.current?.focus(), 0);
-      }
-    }
-  };
-
-  const handleInstallmentsInput = (rawValue) => {
-    const digits = (rawValue || "").replace(/\D/g, "");
-
-    if (!digits) {
-      setInstallments("");
-      return;
-    }
-
-    const normalized = Math.min(
-      24,
-      Math.max(1, Number(digits))
-    );
-
-    setInstallments(String(normalized));
-  };
-
-  /* Cuando cambie el método, ajustar cuotas */
-  useEffect(() => {
-    if (
-      paymentMethod !== "tarjetaCredito" &&
-      installments !== "1"
-    ) {
-      setInstallments("1");
-    }
-  }, [paymentMethod, installments]);
-
-  /* Reset del envío si no se completan etapas */
-  useEffect(() => {
-    if (stage < 3) {
-      setShippingOption(defaultShippingOption);
-      setDeliveryZone(defaultDeliveryZone);
-    }
-  }, [stage]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (!items.length) {
-      setStatus({
-        type: "error",
-        message:
-          "Agregá productos al carrito antes de completar el pago.",
-      });
-      return;
-    }
-
-    if (stage < 3 || hasContactErrors || hasCardErrors) {
-      setStatus({
-        type: "error",
-        message:
-          "Revisá los campos marcados antes de continuar.",
-      });
-      return;
-    }
-
-    setStatus({
-      type: "success",
-      message:
-        "Gracias por tu compra. Validamos los datos y en breve confirmamos el retiro o envío.",
-    });
-  };
-
-  /* ------------------------------------------------- */
-  /*                       RENDER                       */
-  /* ------------------------------------------------- */
+  const cart = useCart();
+  const { loading, error, refresh } = useCatalog();
+  const [checking, setChecking] = useState(false);
+  const [orderNotice, setOrderNotice] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [shippingOption, setShippingOption] = useState("retiro");
+  const [installments, setInstallments] = useState("");
+  const [contact, setContact] = useState({ nombre: "", telefono: "", direccion: "", localidad: "", codigoPostal: "" });
+  const [notes, setNotes] = useState("");
+  const changeContact = (event) => setContact((previous) => ({ ...previous, [event.target.name]: event.target.value }));
+  const message = buildOrderMessage({ ...cart, paymentMethod, installments, shippingOption, contact, notes });
 
   return (
-    <main className="facturacion-page section">
-
-      <header className="facturacion-hero">
-        <p className="eyebrow">Finalizá tu pedido</p>
-        <h1>Facturación y pago</h1>
+    <main className="pedido-page">
+      {(cart.catalogNotice || orderNotice) && <p role="status" className="catalog-status">{orderNotice || cart.catalogNotice}</p>}
+      <header className="pedido-header">
+        <p className="pedido-eyebrow">TU PEDIDO, A UN MENSAJE</p>
+        <h1>Completá tu pedido</h1>
+        <p>Elegí cómo pagar y recibir tus productos. La central coordina todo con vos por WhatsApp.</p>
+        <nav className="pedido-steps" aria-label="Pasos del pedido">
+          <Link to="/carrito">1. Productos</Link><span aria-current="step">2. Pago y entrega</span><span>3. WhatsApp</span>
+        </nav>
       </header>
-
-      <section className="facturacion-grid">
-
-        {/* FORMULARIO IZQUIERDO */}
-        <section
-          className="facturacion-form"
-          aria-label="Formulario de facturación"
-        >
-          <form onSubmit={handleSubmit} autoComplete="off">
-
-            {/* ----------- 1) MÉTODO DE PAGO ----------- */}
-            <article className="form-stage is-visible">
-              <MetodoDePago
-                metodoElegido={paymentMethod}
-                onSelect={handlePaymentMethodSelect}
-              />
-            </article>
-
-            {/* ----------- TRANSFERENCIA ----------- */}
-            <article
-              className={`form-stage transfer-stage ${
-                paymentMethod === "transferencia"
-                  ? "is-visible"
-                  : ""
-              }`}
-            >
-              <section className="transfer-card">
-                <p className="transfer-card__title">
-                  Datos para transferir
-                </p>
-
-                <dl>
-                  <section>
-                    <dt>Alias</dt>
-                    <dd>lebron-suplementos</dd>
-                  </section>
-
-                  <section>
-                    <dt>CBU</dt>
-                    <dd>0000003100070496189659</dd>
-                  </section>
-
-                  <section>
-                    <dt>Titular</dt>
-                    <dd>Lebron Suplementos SA</dd>
-                  </section>
-
-                  <section>
-                    <dt>Banco</dt>
-                    <dd>Mercado Pago</dd>
-                  </section>
-                </dl>
-
-                <p className="transfer-card__note">
-                  Copiá estos datos en tu homebanking o app
-                  y confirmá el pago cuando lo completes.
-                </p>
-              </section>
-            </article>
-
-            {/* ----------- 2) DATOS DE TARJETA ----------- */}
-            {cardRequired && (
-              <article
-                className={`form-stage ${
-                  stage >= 2 ? "is-visible" : ""
-                }`}
-              >
-                <FormularioTarjeta
-                  tarjeta={card}
-                  erroresTarjeta={cardErrors}
-                  onChange={handleCardChange}
-                  refNumero={refNumero}
-                  refVencimiento={refVencimiento}
-                  refCvc={refCvc}
-                />
-              </article>
-            )}
-
-            {/* ----------- 3) DATOS PERSONALES ----------- */}
-            {personalStageVisible && (
-              <article
-                className={`form-stage ${
-                  personalStageVisible ? "is-visible" : ""
-                }`}
-              >
-                <DatosPersonales
-                  datos={contact}
-                  errores={contactErrors}
-                  onChange={handleContactChange}
-                  requiereDireccion={
-                    shippingOption === "envio"
-                  }
-                />
-              </article>
-            )}
-
-            {/* ----------- 4) CUOTAS (si tarjeta crédito) ----------- */}
-            {cuotasStageVisible && (
-              <article
-                className={`form-stage ${
-                  cuotasStageVisible ? "is-visible" : ""
-                }`}
-              >
-                <Cuotas
-                  cuotas={installments}
-                  onChangeCuotas={handleInstallmentsInput}
-                  interesPorCuota={interestRatePerInstallment}
-                  montoPorCuota={installmentValue}
-                  hayInteres={numericInstallments > 1}
-                />
-              </article>
-            )}
-
-            {/* ----------- PLACEHOLDER SI FALTA ETAPA ----------- */}
-            {stage < 2 && (
-              <p className="stage-placeholder">
-                Seleccioná un medio de pago para continuar.
-              </p>
-            )}
-
-            {/* ----------- 5) RETIRO O ENVÍO ----------- */}
-            <article
-              className={`form-stage ${
-                stage >= 3 ? "is-visible" : "is-disabled"
-              }`}
-            >
-              <EnvioRetiro
-                opcionEnvio={shippingOption}
-                onCambiarOpcion={setShippingOption}
-                zonas={shippingZones}
-                zonaSeleccionada={deliveryZone}
-                onSeleccionZona={setDeliveryZone}
-                etapaActiva={stage >= 3}
-              />
-            </article>
-
-            {/* ----------- BOTÓN CONFIRMAR ----------- */}
-            <section className="facturacion-actions">
-              <Boton
-                type="submit"
-                variant="primary"
-                disabled={disableSubmit}
-              >
-                Confirmar pago
-              </Boton>
-
-              {status.message && (
-                <p
-                  className={`facturacion-status ${
-                    status.type
-                  }`}
-                >
-                  {status.message}
-                </p>
-              )}
-            </section>
-
-          </form>
+      {!cart.items.length ? (
+        <section className="pedido-panel pedido-empty">
+          <h2>Tu carrito está vacío</h2>
+          <p>Elegí tus productos para armar el pedido.</p>
+          <Link className="pedido-button" to="/">Ver productos</Link>
         </section>
-
-        {/* ----------- COLUMNA DERECHA: RESUMEN ----------- */}
-        <Resumen
-          items={items}
-          subtotal={subtotal}
-          costoEnvio={shippingCost}
-          descuento={paymentDiscount}
-          cartDiscount={couponDiscount}
-          couponCode={couponCode}
-          interes={interestAmount}
-          totalFinal={finalTotal}
-          cuotasActivas={activeInstallments}
-          montoPorCuota={installmentValue}
-        />
-
-      </section>
+      ) : (
+        <div className="pedido-layout">
+          <form className="pedido-fields" noValidate onSubmit={(event) => event.preventDefault()}>
+            <fieldset className="pedido-panel">
+              <legend>Medio de pago</legend>
+              <p>Elegí tu preferencia. El pago se coordina con la central.</p>
+              <div className="pedido-options">
+                {paymentMethods.map((method) => <label key={method.id} className={paymentMethod === method.id ? "is-selected" : ""}>
+                  <input type="radio" name="pago" value={method.id} checked={paymentMethod === method.id} onChange={() => setPaymentMethod(method.id)} />
+                  {method.label}
+                </label>)}
+              </div>
+              {paymentMethod === "tarjetaCredito" && <label className="pedido-field">
+                Cuotas que te interesan
+                <input value={installments} onChange={(event) => setInstallments(event.target.value)} placeholder="Ej.: 3 cuotas o a coordinar" />
+                <small>La central te informa las cuotas disponibles y el importe final.</small>
+              </label>}
+            </fieldset>
+            <fieldset className="pedido-panel">
+              <legend>Entrega</legend>
+              <div className="pedido-options">
+                <label className={shippingOption === "retiro" ? "is-selected" : ""}>
+                  <input type="radio" name="entrega" checked={shippingOption === "retiro"} onChange={() => setShippingOption("retiro")} />Retiro por Casa Central
+                </label>
+                <label className={shippingOption === "envio" ? "is-selected" : ""}>
+                  <input type="radio" name="entrega" checked={shippingOption === "envio"} onChange={() => setShippingOption("envio")} />Envío a domicilio
+                </label>
+              </div>
+              {shippingOption === "retiro" ? <p>Av. Mitre 564. Coordinamos el retiro por WhatsApp.</p> : <>
+                <div className="pedido-contact">
+                  <label className="pedido-field pedido-wide">Dirección y departamento
+                    <input name="direccion" autoComplete="street-address" value={contact.direccion} onChange={changeContact} placeholder="Calle, número, piso o departamento" />
+                  </label>
+                  <label className="pedido-field">Localidad / provincia
+                    <input name="localidad" autoComplete="address-level2" value={contact.localidad} onChange={changeContact} placeholder="Tu localidad y provincia" />
+                  </label>
+                  <label className="pedido-field">Código postal
+                    <input name="codigoPostal" autoComplete="postal-code" value={contact.codigoPostal} onChange={changeContact} />
+                  </label>
+                </div>
+                <p>El costo y el plazo del envío se coordinan con la central.</p>
+              </>}
+            </fieldset>
+            <fieldset className="pedido-panel">
+              <legend>Tus datos</legend>
+              <div className="pedido-contact">
+                <label className="pedido-field">Nombre y apellido
+                  <input name="nombre" autoComplete="name" value={contact.nombre} onChange={changeContact} placeholder="¿Cómo te llamás?" />
+                </label>
+                <label className="pedido-field">Teléfono de contacto
+                  <input name="telefono" type="tel" autoComplete="tel" value={contact.telefono} onChange={changeContact} placeholder="Código de área y número" />
+                </label>
+                <label className="pedido-field pedido-wide">Observaciones
+                  <textarea rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} placeholder="Horarios de entrega, referencias o consultas sobre el pedido" />
+                </label>
+              </div>
+              <p>Si dejás algún dato pendiente, podés coordinarlo por WhatsApp.</p>
+            </fieldset>
+          </form>
+          <aside className="pedido-panel pedido-summary" aria-label="Resumen del pedido">
+            <h2>Tu pedido</h2>
+            <Link to="/carrito">Editar productos</Link>
+            <ul className="pedido-items">{cart.items.map((item) => <li key={item.cartKey}>
+              <strong>{item.nombre}</strong>
+              {variantText(item) && <small>{variantText(item)}</small>}
+              <span>{item.qty} × {money(item.precio)} <b>{money(item.qty * item.precio)}</b></span>
+            </li>)}</ul>
+            <dl className="pedido-totals">
+              <div><dt>Subtotal</dt><dd>{money(cart.total)}</dd></div>
+              {cart.couponDiscount > 0 && <div><dt>Cupón {cart.couponCode.trim().toUpperCase()}</dt><dd>−{money(cart.couponDiscount)}</dd></div>}
+              <div className="pedido-total"><dt>Total de productos</dt><dd>{money(cart.totalWithDiscount)}</dd></div>
+              <div><dt>Entrega</dt><dd>{shippingOption === "envio" ? "Envío a coordinar" : "Retiro sin costo"}</dd></div>
+            </dl>
+            <p>La central confirma disponibilidad, descuentos y condiciones de pago antes de cerrar la compra.</p>
+            <button className="pedido-button pedido-whatsapp" disabled={checking || loading || Boolean(error)} onClick={async () => {
+              setChecking(true); setOrderNotice('');
+              try {
+                const current = await refresh();
+                if (!current) { setOrderNotice('No pudimos actualizar el catálogo. Reintentá antes de enviar el pedido.'); return; }
+                if (JSON.stringify(reconcileCart(cart.items, current)) !== JSON.stringify(cart.items)) {
+                  setOrderNotice('El catálogo cambió. Revisá el carrito actualizado y volvé a enviar el pedido.'); return;
+                }
+                window.location.assign(buildWhatsAppUrl(message));
+              } finally { setChecking(false); }
+            }}>{checking ? 'Actualizando pedido…' : 'Enviar pedido por WhatsApp'}</button>
+            <small>Se abrirá WhatsApp con el pedido armado. Tocá enviar en el chat de Casa Central para compartirlo.</small>
+            <details className="pedido-preview"><summary>Ver el mensaje completo</summary><pre>{message}</pre></details>
+          </aside>
+        </div>
+      )}
     </main>
   );
 }
-
-
-
-
-
-
-
-
-
-
-

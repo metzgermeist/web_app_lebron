@@ -18,7 +18,7 @@ const CARD_BRANDS = [
   { name: "Diners", pattern: /^(30[0-5]|36|38)/ },
 ];
 
-export function getCardType(number = "") {
+function getCardType(number = "") {
   const digits = (number || "").replace(/\D/g, "");
   if (!digits) return "";
   const match = CARD_BRANDS.find((entry) => entry.pattern.test(digits));

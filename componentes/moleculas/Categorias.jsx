@@ -7,12 +7,12 @@ import amino from "../../assets/img/amino (1).png";
 import vitaminas from "../../assets/img/vitaminas (1).png";
 import accesorios from "../../assets/img/accesorios (1).png";
 import quemadores from "../../assets/img/quemadorr (1).png";
-import combosImg from "../../assets/img/platon.png";
 import Tarjeta from "../atomicos/tarjeta.jsx";
 import "../../assets/css/moleculas/categorias.css";
-import products from "../../src/data/productos.json";
+import { useCatalog } from "../../src/context/CatalogContext.jsx";
 
 export default function Categorias() {
+  const { products } = useCatalog();
   const categorias = [
     { nombre: "Proteinas", imagen: protein, alt: "Proteinas", slug: "proteinas", descripcion: "Marcas: ON, ENA, Star, UltraTech, Mervick", descuento: "30% de descuento" },
     { nombre: "Alimentos", imagen: alimentos, alt: "Alimentos", slug: "alimentos", descripcion: "Harina de avena, peanut butter, barras, snacks fit", descuento: "20% de descuento" },
@@ -25,14 +25,18 @@ export default function Categorias() {
   ];
 
   // Mostrar solo categorías que existan en el JSON real
-  const available = new Set((products || []).map(p => (p.categoria || "").toLowerCase()));
-  const visibles = categorias.filter(cat => available.has(cat.slug));
+  const normalize = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const available = [...new Set(products.map(product => normalize(product.categoria)))];
+  const visibles = available.map(slug => categorias.find(category => category.slug === slug) || {
+    slug, nombre: products.find(product => normalize(product.categoria) === slug).categoria,
+    imagen: protein, alt: slug, descripcion: 'Explorá los productos de esta categoría.',
+  });
 
   return (
     <section id="categorias" className="section">
       <section className="container categories-wrap">
         <h1>Categorias destacadas</h1>
-        <h2>Descuentos Black Friday</h2>
+        <h2>Encontrá tus suplementos</h2>
         <section className="categories-grid" aria-label="Listado de categorias">
           {visibles.map((cat) => (
             <Tarjeta
@@ -40,7 +44,6 @@ export default function Categorias() {
               titulo={cat.nombre}
               subtitulo={cat.alt}
               descripcion={cat.descripcion}
-              descuento={cat.descuento}
               imagen={cat.imagen}
               href={`/categoria/${cat.slug}`}
             />

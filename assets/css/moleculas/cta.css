@@ -9,7 +9,7 @@
   background:
     radial-gradient(120% 100% at 100% 0%, rgb(255, 255, 255) 0%, transparent 60%),
     radial-gradient(120% 100% at 0% 100%, rgba(21, 153, 39, 0.35) 0%, transparent 60%),
-    linear-gradient(135deg, color-mix(in srgb, var(--primary) 60%, #000 40%), #0b0b0f);
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 60%, #000 40%), #0f0b0b);
 }
 
 .cta-inner {
@@ -26,7 +26,7 @@
 
 .cta-sub {
   margin: 0 0 1rem;
-  color: #cbd5e1;
+  color: #e1cbcd;
 }
 
 .cta-actions {

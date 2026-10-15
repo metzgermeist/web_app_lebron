@@ -38,21 +38,21 @@ const IconPuzzle = () => (
 function Links({
   open = false,
   items = [
-    { href: "#categorias",           label: "Suplementos", icon: <IconDumbbell />, gradA: "#38bdf8", gradB: "#1d4ed8"  },
-    { href: "/categoria/alimentos", label: "Alimentos",  icon: <IconApple />,    gradA: "#7c3aed", gradB: "#4c1d95" },
-    { href: "/categoria/accesorios",label: "Accesorios", icon: <IconBag />,      gradA: "#0ea5e9", gradB: "#2563eb"  },
-    { href: "/marcas",              label: "Marcas",      icon: <IconTag />,      gradA: "#a855f7", gradB: "#6d28d9" },
-    { href: "/categoria/combos",     label: "Combos",      icon: <IconPuzzle />,   gradA: "#60a5fa", gradB: "#2563eb" },
+    { href: "#categorias",           label: "Suplementos", icon: <IconDumbbell />, gradA: "#f8384b", gradB: "#d81d30"  },
+    { href: "/categoria/alimentos", label: "Alimentos",  icon: <IconApple />,    gradA: "#ed3a4c", gradB: "#951d29" },
+    { href: "/categoria/accesorios",label: "Accesorios", icon: <IconBag />,      gradA: "#e90e24", gradB: "#eb2539"  },
+    { href: "/marcas",              label: "Marcas",      icon: <IconTag />,      gradA: "#f75565", gradB: "#d9283a" },
+    { href: "/categoria/combos",     label: "Combos",      icon: <IconPuzzle />,   gradA: "#fa606f", gradB: "#eb2539" },
   ],
   onItemClick,
   activeIndex = -1,
 }) {
     const palette = [
-        ["#38bdf8", "#1d4ed8"],
-        ["#a855f7", "#7c3aed"],
-        ["#0ea5e9", "#2563eb"],
-        ["#6366f1", "#4f46e5"],
-        ["#c084fc", "#7c3aed"],
+        ["#f8384b", "#d81d30"],
+        ["#f75565", "#ed3a4c"],
+        ["#e90e24", "#eb2539"],
+        ["#f16371", "#e54656"],
+        ["#fc8490", "#ed3a4c"],
     ];
 
   const finalItems = items.map((it, idx) => ({
@@ -76,7 +76,7 @@ function Links({
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => {
                 if (onItemClick) onItemClick(e);
-                try { e.currentTarget.blur(); } catch {}
+                try { e.currentTarget.blur(); } catch { /* La navegaci?n puede continuar sin cambiar el foco. */ }
               }}
               aria-label={it.label}
             >
@@ -90,7 +90,7 @@ function Links({
               onMouseDown={(e) => e.preventDefault()}
               onClick={(e) => {
                 if (onItemClick) onItemClick(e);
-                try { e.currentTarget.blur(); } catch {}
+                try { e.currentTarget.blur(); } catch { /* La navegaci?n puede continuar sin cambiar el foco. */ }
               }}
               aria-label={it.label}
             >

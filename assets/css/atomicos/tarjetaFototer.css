@@ -33,7 +33,7 @@ nav[aria-label="Sucursales"] > strong {
 .tf-text { display: grid; gap: .45rem; align-content: start; }
 
 .tf-title {
-  color: #e5e7eb;
+  color: #ebe5e6;
   font-weight: 600;
   letter-spacing: .02em;
   font-family: "Orbitron", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;

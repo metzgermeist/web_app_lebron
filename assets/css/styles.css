@@ -1,24 +1,24 @@
 /* Eliminado: Montserrat */
 :root{
     /* Líneas y destellos */
-    --divider-soft: rgba(129, 140, 248, 0.45);
-    --divider-strong: #312e81;
-    --divider-glow1: rgba(99, 102, 241, 0.85);
-    --divider-glow2: rgba(129, 140, 248, 0.25);
+    --divider-soft: rgba(248, 129, 141, 0.45);
+    --divider-strong: #812e36;
+    --divider-glow1: rgba(241, 99, 113, 0.85);
+    --divider-glow2: rgba(248, 129, 141, 0.25);
 
     /* Fondo global */
-    --bg-base: #02020a;
-    --bg-accent: #0f172a;
-    --bg-accent-soft: rgba(59, 130, 246, 0.15);
-    --bg-light: rgba(59, 130, 246, 0.08);
-    --bg-stripe: rgba(59, 130, 246, 0.05);
+    --bg-base: #000000;
+    --bg-accent: #2a0f12;
+    --bg-accent-soft: rgba(246, 59, 78, 0.15);
+    --bg-light: rgba(246, 59, 78, 0.08);
+    --bg-stripe: rgba(246, 59, 78, 0.05);
 
     /* Paleta principal */
-    --primary: #6366f1;
-    --primary-dark: #312e81;
-    --primary-soft: rgba(99, 102, 241, 0.25);
-    --secondary: #7c3aed;
-    --accent: #38bdf8;
+    --primary: #ed0019;
+    --primary-dark: #990010;
+    --primary-soft: rgba(237, 0, 25, 0.25);
+    --secondary: #c90015;
+    --accent: #ff4054;
 }
 
 /* Reset mínimo para evitar overflow por padding/border */
@@ -29,7 +29,7 @@ html, body { min-height: 100%; width: 100%; overflow-x: clip; }
 body{
 
   background: var(--bg-base);
-  color:#e5e7eb;
+  color:#ebe5e6;
   position:relative;
   margin: 0; /* elimina el gap inferior/superior del body */
   /* Fuente base legible para textos generales */

@@ -1,7 +1,7 @@
 /* Botón/Lista de redes sociales (Lebron) */
 .lb-social {
   --size: 3.25rem;
-  --border: rgba(229, 231, 235, .55); /* base #e5e7eb */
+  --border: rgba(235, 229, 230, .55); /* base #ebe5e6 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,7 +48,7 @@
   place-items: center;
   width: var(--size);
   aspect-ratio: 1;
-  color: #e5e7eb;
+  color: #ebe5e6;
   border: 1px solid var(--border);
   border-radius: 999px;
   text-decoration: none;

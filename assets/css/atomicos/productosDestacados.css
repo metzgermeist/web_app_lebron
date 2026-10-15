@@ -4,13 +4,13 @@
   padding: 2rem clamp(1rem, 3vw, 2.5rem);
   border-radius: 1.25rem;
   background:
-    radial-gradient(circle at 20% -10%, rgba(59, 131, 246, 0), transparent 55%),
-    radial-gradient(circle at 80% 20%, rgba(14, 164, 233, 0.021), transparent 55%),
-    linear-gradient(180deg, rgba(2, 5, 30, 0.644) 0%, rgba(3, 6, 28, 0.459) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.45);
+    radial-gradient(circle at 20% -10%, rgba(246, 59, 78, 0), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(233, 14, 36, 0.021), transparent 55%),
+    linear-gradient(180deg, rgba(30, 2, 5, 0.644) 0%, rgba(28, 3, 6, 0.459) 100%);
+  border: 1px solid rgba(241, 99, 113, 0.45);
   box-shadow:
     0 25px 45px rgba(0, 0, 0, 0.65),
-    inset 0 0 1px rgba(56, 189, 248, 0.35);
+    inset 0 0 1px rgba(248, 56, 75, 0.35);
   width: 98%;
 }
 
@@ -23,14 +23,14 @@
   font-size: 0.9rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #cbd5e1;
+  color: #e1cbcd;
 }
 
 .productos-destacados__header h2 {
   margin: 0;
   font-size: clamp(1.75rem, 4vw, 2.4rem);
-  color: #f8fafc;
-  text-shadow: 0 0 1.5rem rgba(59, 130, 246, 0.45);
+  color: #fcf8f8;
+  text-shadow: 0 0 1.5rem rgba(246, 59, 78, 0.45);
 }
 
 .productos-destacados__slider {
@@ -59,16 +59,16 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  border: 1px solid rgba(56, 189, 248, 0.65);
-  background: rgba(5, 8, 25, 0.85);
-  color: #e0f2fe;
+  border: 1px solid rgba(248, 56, 75, 0.65);
+  background: rgba(25, 5, 7, 0.85);
+  color: #fee0e3;
   font-size: 1.5rem;
   display: grid;
   place-items: center;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
   z-index: 5;
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 15px rgba(248, 56, 75, 0.5);
 }
 
 .productos-destacados__control--prev {
@@ -102,10 +102,10 @@
 
 .productos-destacados__control:hover,
 .productos-destacados__control:focus-visible {
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(42, 15, 18, 0.95);
   box-shadow:
-    0 0 18px rgba(56, 189, 248, 0.55),
-    0 0 35px rgba(79, 70, 229, 0.4);
+    0 0 18px rgba(248, 56, 75, 0.55),
+    0 0 35px rgba(229, 70, 86, 0.4);
   transform: translateY(-5%);
 }
 
@@ -151,6 +151,6 @@
 .productos-destacados__meta {
   margin-top: 1.25rem;
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: #e1cbcd;
   text-align: center;
 }

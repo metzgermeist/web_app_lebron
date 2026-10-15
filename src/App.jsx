@@ -2,9 +2,7 @@ import Nav from "../componentes/moleculas/nav.jsx";
 import NavMobile from "../componentes/moleculas/navMobile.jsx";
 import Header from "../componentes/moleculas/header.jsx";
 import Categorias from "../componentes/moleculas/Categorias.jsx";
-import Beneficios from "../componentes/moleculas/Beneficios.jsx";
 import FAQ from "../componentes/moleculas/FAQNew.jsx";
-import CTA from "../componentes/moleculas/CTA.jsx";
 import Gancho from "../componentes/moleculas/gancho.jsx";
 import Footer from "../componentes/moleculas/footer.jsx";
 import Carrusel from "../componentes/atomicos/carrusel.jsx";
@@ -12,8 +10,6 @@ import Comprador from "../componentes/moleculas/Comprador.jsx";
 import ProductosDestacados from "../componentes/atomicos/productosDestacados.jsx";
 import Promocion from "../componentes/moleculas/promocion.jsx";
 import Promocion2 from "../componentes/moleculas/promocion2.jsx";
-import Mayorista from "../componentes/moleculas/mayorista.jsx";
-import GranPromo from "../componentes/moleculas/GranPromo.jsx";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useLayoutEffect } from "react";
 import "../assets/css/atomicos/fondos.css";
@@ -24,8 +20,9 @@ import Carrito from "./pages/Carrito.jsx";
 import Detalle from "./pages/detalle.jsx";
 import Facturacion from "./pages/facturacion.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+import { CatalogProvider, CatalogStatus } from "./context/CatalogContext.jsx";
+import Admin from "./pages/Admin.jsx";
 
-import c1 from "../assets/img/carrusel/1.png";
 import c2 from "../assets/img/carrusel/2.png";
 import c3 from "../assets/img/carrusel/3.png";
 import c4 from "../assets/img/carrusel/4.png";
@@ -69,12 +66,10 @@ function App() {
 
   const Home = () => (
     <>
-      <GranPromo />
       <Header />
       <main>
         <Comprador />
         <Categorias />
-        <Mayorista />
         <Carrusel items={carruselItems} intervalo={5000} />
         <Promocion />
         <FAQ />
@@ -96,6 +91,7 @@ function App() {
     const location = useLocation();
 
     const pathname = stripTrailingSlash(location.pathname);
+    const isAdmin = pathname === "/admin";
 
     useLayoutEffect(() => {
       if (typeof window === "undefined") {
@@ -117,6 +113,10 @@ function App() {
 
       scrollToHash();
     }, [location.pathname, location.search, location.hash]);
+
+    useLayoutEffect(() => {
+      if (isAdmin) document.body.classList.remove("has-fixed-nav");
+    }, [isAdmin]);
 
     // Resolver ruta efectiva independientemente del entorno
     const effectivePath =
@@ -153,9 +153,9 @@ function App() {
           <div className="fondo-stars fondo-stars2" aria-hidden="true" />
           <div className="fondo-stars fondo-stars3" aria-hidden="true" />
         </>
-        <Nav />
-        <NavMobile />
+        {!isAdmin && <><Nav /><NavMobile /><CatalogStatus /></>}
         <Routes>
+          <Route path="/admin" element={<Admin />} />
           <Route path="/" element={<Home />} />
           <Route path="/categoria/:nombre" element={<Generica />} />
           <Route path="/marcas" element={<Marcas />} />
@@ -164,16 +164,18 @@ function App() {
           <Route path="/producto/:id" element={<Detalle />} />
           <Route path="*" element={<Home />} />
         </Routes>
-        <Footer />
+        {!isAdmin && <Footer />}
       </>
     );
   };
 
   return (
     <BrowserRouter basename={base}>
+      <CatalogProvider>
       <CartProvider>
         <RouterWithBodyClass />
       </CartProvider>
+      </CatalogProvider>
     </BrowserRouter>
   );
 }

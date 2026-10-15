@@ -210,7 +210,7 @@
 
 .nav-links .nav-item:hover .link-pill,
 .nav-links .nav-item:focus-within .link-pill {
-    background: linear-gradient(45deg, var(--grad-a, #38bdf8), var(--grad-b, #4c1d95));
+    background: linear-gradient(45deg, var(--grad-a, #f8384b), var(--grad-b, #951d29));
     border: 0.1em solid rgba(255, 255, 255, 0.932);
     box-shadow: 0 4px 12px color-mix(in srgb, var(#ffffff, #ffffff) 55%, transparent);
 }

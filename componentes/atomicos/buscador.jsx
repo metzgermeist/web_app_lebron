@@ -1,8 +1,8 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import "../../assets/css/atomicos/buscador.css"; // Asegúrate que esta ruta sea correcta
 
 import { useNavigate, Link } from "react-router-dom";
-import products from "../../src/data/productos.json";
+import { useCatalog } from "../../src/context/CatalogContext.jsx";
 
 export default function Buscador({
   placeholder = "Buscar...",
@@ -11,8 +11,10 @@ export default function Buscador({
   onSubmit,
   className = "",
   ariaLabel = "Buscar",
-  allItems = products, // Por defecto usa el JSON real
+  allItems: suppliedItems,
 }) {
+  const { products } = useCatalog();
+  const allItems = suppliedItems || products;
   const navigate = useNavigate();
   const [internal, setInternal] = useState("");
   const [focused, setFocused] = useState(false);
@@ -87,15 +89,6 @@ export default function Buscador({
     inputRef.current?.blur();
   };
 
-  const handleSuggestionClick = (sug) => {
-    setValue(sug.nombre);
-    if (onSubmit) onSubmit(sug);
-    if (sug.kind === 'cat') navigate(`/categoria/${sug.slug}`);
-    else navigate(`/categoria/${norm(sug.slug || sug.nombre)}`);
-    setFocused(false);
-    inputRef.current?.blur();
-  };
-  
   const handleClear = () => {
     setValue("");
     setFocused(false);
@@ -120,7 +113,7 @@ export default function Buscador({
       aria-label={ariaLabel}
       onSubmit={handleSubmit}
       onFocus={() => setFocused(true)}
-      onBlur={(e) => {
+      onBlur={() => {
         // Delay para permitir click en sugerencias y luego cerrar limpiando
         setTimeout(() => {
           const stillInside = containerRef.current?.contains(document.activeElement);

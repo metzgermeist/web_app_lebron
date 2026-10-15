@@ -2,8 +2,8 @@
 
 .footer {
   --footer-bg: #000000a9;
-  --footer-fg: #e5e7eb;
-  --footer-muted: #a3acba;
+  --footer-fg: #ebe5e6;
+  --footer-muted: #baa3a5;
   --footer-border: rgba(255, 255, 255, 0.08);
   --footer-accent: #ff7a1a;
   z-index: 7;
@@ -120,7 +120,7 @@
 /* Mobile-specific adjustments for gradient and spacing */
 @media (max-width: 768px) {
   .footer {
-    background: linear-gradient(180deg, #000000 0%, rgba(23, 10, 83, 0.4) 45%, #000000 100%);
+    background: linear-gradient(180deg, #000000 0%, rgba(83, 10, 17, 0.4) 45%, #000000 100%);
   }
 
   .footer .content {

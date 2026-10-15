@@ -84,23 +84,23 @@
 }
 
 .lb-ghost:hover {
-  background-color: color-mix(in srgb, var(--primary, #9819e1) 22%, transparent);
+  background-color: color-mix(in srgb, var(--primary, #e1192d) 22%, transparent);
   /* ligero relleno al pasar el cursor */
   transform: translateY(-2px);
   /* elevacion sutil */
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--primary, #19b2e1) 40%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--primary, #e1192d) 40%, transparent);
   /* sombra difusa */
 }
 
 /* ---- BLACK FRIDAY ---- */
 .lb-black-friday {
-  background: linear-gradient(145deg, #030712, #0c1b4a 65%);
-  /* fondo oscuro con matices azules */
-  color: #dbeafe;
+  background: linear-gradient(145deg, #120305, #4a0c12 65%);
+  /* fondo oscuro con matices rojos */
+  color: #fedbdf;
   /* texto claro para contraste */
-  border: 2px solid #7c3aed;
-  /* borde violeta intenso */
-  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.75);
+  border: 2px solid #ed3a4c;
+  /* borde rojo intenso */
+  box-shadow: 0 8px 25px rgba(42, 15, 18, 0.75);
   /* sombra profunda para dramatismo */
 }
 
@@ -108,8 +108,8 @@
   filter: brightness(115%);
   /* highlight al pasar */
   transform: scale(1.04);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.85);
-  color: #e0e7ff;
+  box-shadow: 0 10px 30px rgba(42, 15, 18, 0.85);
+  color: #ffe0e3;
 }
 
 .lb-black-friday:active {
@@ -173,8 +173,8 @@
 }
 
 .lb-57.lb-black-friday::after {
-  background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-  /* destello violeta/azul */
+  background: linear-gradient(135deg, #ed3a4c, #e90e24);
+  /* destello rojo */
 }
 
 .lb-57:hover::after,
